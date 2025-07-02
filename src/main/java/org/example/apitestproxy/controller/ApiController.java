@@ -20,17 +20,18 @@ public class ApiController {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/one")
-    public ResponseEntity<Object> relayOne(@RequestBody ApiRequest request) {
+    public ResponseEntity<Object> one(@RequestBody ApiRequest request) {
         try {
             // 1. 최종 URL 구성
-            String fullUrl = "http://" + request.getServerIp() + ":" + request.getServerPort() + request.getApiUrl();
+            String fullUrl = "http://" + request.getServerIp() + ":" + request.getServerPort() + "/crebee" + request.getApiUrl();
 
             // 2. 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Basic Y2JlOmNiZQ==");
 
             if (request.getToken() != null && !request.getToken().isEmpty()) {
-                headers.setBearerAuth(request.getToken());
+                headers.set("token", request.getToken());
             }
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request.getApiParams(), headers);
@@ -62,7 +63,7 @@ public class ApiController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<Object> relayBatch(@RequestBody ApiBatchRequest batchRequest) {
+    public ResponseEntity<Object> batch(@RequestBody ApiBatchRequest batchRequest) {
         try {
             List<Map<String, Object>> results = new ArrayList<>();
 
